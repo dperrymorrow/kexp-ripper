@@ -31,14 +31,14 @@ const req = http.request(options, res => {
       .filter(link => link.nameRaw.includes("-"));
 
     music.forEach(link => {
-      if (fs.existsSync(`${__dirname}/songs/${link.name}`))
+      if (fs.existsSync(`${__dirname}/songs/${link.name}`)) {
         console.log(chalk.yellow(`already have ${link.name}`));
-      else console.log(chalk.red(link.url), chalk.green(link.name));
-
-      download(link.url, { directory: "./songs/", filename: link.name }, err => {
-        if (err) console.log(`Error with ${chalk.magenta(link.url)} ${chalk.red.bold(err)}`);
-        else console.log(chalk.green(link.name));
-      });
+      } else {
+        download(link.url, { directory: "./songs/", filename: link.name }, err => {
+          if (err) console.log(`Error with ${chalk.magenta(link.url)} ${chalk.red.bold(err)}`);
+          else console.log(chalk.green(link.name));
+        });
+      }
     });
   });
 });
