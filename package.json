@@ -1,0 +1,32 @@
+{
+  "name": "kexp-ripper",
+  "version": "1.0.0",
+  "description": "rip kexp song of the day",
+  "main": "index.js",
+  "scripts": {
+    "scrape": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dperrymorrow/kexp-ripper.git"
+  },
+  "author": "David Morrow",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dperrymorrow/kexp-ripper/issues"
+  },
+  "homepage": "https://github.com/dperrymorrow/kexp-ripper#readme",
+  "devDependencies": {
+    "eslint": "^4.12.1",
+    "eslint-plugin-prettier": "^2.3.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-unicorn": "^3.0.0",
+    "prettier": "^1.9.1"
+  },
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "download-file": "^0.1.5",
+    "lodash.kebabcase": "^4.1.1",
+    "lodash.last": "^3.0.0"
+  }
+}
