@@ -3,6 +3,7 @@
 const _last = require("lodash.last");
 const _kebabCase = require("lodash.kebabcase");
 const _uniqBy = require("lodash.uniqby");
+const _shuffle = require("lodash.shuffle");
 const http = require("http");
 // const download = require("download");
 const chalk = require("chalk");
@@ -24,18 +25,20 @@ const req = http.request(options, res => {
   console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
   res.setEncoding("utf8");
   res.on("data", chunk => {
-    const music = _uniqBy(
-      chunk
-        .split(".mp3")
-        .map(seg => seg.split("http://")[1])
-        .filter(url => url && url.includes("media.kexp.org"))
-        .map(url => ({
-          url: `http://${url}.mp3`,
-          nameRaw: _last(url.split("/")),
-          name: `${_kebabCase(_last(url.split("/")))}.mp3`,
-        }))
-        .filter(link => link.nameRaw.includes("-")),
-      link => link.url
+    const music = _shuffle(
+      _uniqBy(
+        chunk
+          .split(".mp3")
+          .map(seg => seg.split("http://")[1])
+          .filter(url => url && url.includes("media.kexp.org"))
+          .map(url => ({
+            url: `http://${url}.mp3`,
+            nameRaw: _last(url.split("/")),
+            name: `${_kebabCase(_last(url.split("/")))}.mp3`,
+          }))
+          .filter(link => link.nameRaw.includes("-")),
+        link => link.url
+      )
     );
 
     music.forEach(link => {
@@ -61,16 +64,32 @@ function downloadFile(url, dest) {
     path: urlParser.parse(url).pathname,
   };
 
-  http.get(options, res => {
-    res
-      .on("data", data => {
-        file.write(data);
-      })
-      .on("end", () => {
-        file.end();
-        console.log(chalk.green(_last(dest.split("/"))));
-      });
-  });
+  http
+    .get(options, res => {
+      res
+        .on("data", data => {
+          file.write(data);
+        })
+        .on("end", () => {
+          file.end();
+          if (getFileSize(dest) < 1000) {
+            fs.unlinkSync(dest);
+          } else {
+            console.log(chalk.green(_last(dest.split("/"))));
+            downloadCount--;
+          }
+        });
+    })
+    .on("error", e => {
+      console.log(chalk.red(`Got error: ${e.message}`));
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    });
+}
+
+function getFileSize(filename) {
+  const stats = fs.statSync(filename);
+  const fileSizeInBytes = stats.size;
+  return fileSizeInBytes;
 }
 
 req.on("error", e => {
