@@ -4,6 +4,7 @@
   "description": "rip kexp song of the day",
   "main": "index.js",
   "scripts": {
+    "clear": "rm -rf songs && mkdir songs",
     "scrape": "node index.js"
   },
   "repository": {
@@ -25,8 +26,8 @@
   },
   "dependencies": {
     "chalk": "^2.3.0",
-    "download-file": "^0.1.5",
     "lodash.kebabcase": "^4.1.1",
-    "lodash.last": "^3.0.0"
+    "lodash.last": "^3.0.0",
+    "lodash.uniqby": "^4.7.0"
   }
 }
